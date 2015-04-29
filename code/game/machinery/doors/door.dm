@@ -275,6 +275,7 @@
 
 	if(src.density && !(stat & (NOPOWER|BROKEN)))
 		do_animate("deny")
+
 	return
 
 /obj/machinery/door/proc/take_damage(var/damage)
