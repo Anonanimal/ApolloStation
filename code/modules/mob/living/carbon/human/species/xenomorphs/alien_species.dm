@@ -31,6 +31,8 @@
 
 	reagent_tag = IS_XENOS
 
+	prone_icon = "sleep"
+
 	blood_color = "#05EE05"
 	flesh_color = "#282846"
 	gibbed_anim = "gibbed-a"
@@ -126,6 +128,11 @@
 				if (E.mend_fracture())
 					H << "<span class='alium'>You feel something mend itself inside your [E.display_name].</span>"
 			return 1
+
+	if(!H.reagents.has_reagent("nutriment"))	//Getting food speeds it up
+		H.reagents.add_reagent("nutriment", 1)
+	if(!H.reagents.has_reagent("iron"))
+		H.reagents.add_reagent("iron", 1)
 
 	return 0
 
