@@ -245,6 +245,14 @@
 	item_state = "orange_bandana"
 	body_parts_covered = 0
 
+
+/obj/item/clothing/head/apollo
+	icon = 'icons/apollo/clothing/head.dmi'
+	item_icons = list(
+		icon_l_hand = 'icons/apollo/obj/lefthand.dmi',
+		icon_r_hand = 'icons/apollo/obj/righthand.dmi',
+	)
+
 /obj/item/clothing/head/apollo/jesterhat
 	name = "Jester Hat"
 	desc = "A hat fit for a fool."
@@ -259,13 +267,11 @@
 	icon_state = "butt"
 	item_state = "butt"
 
-
 /obj/item/clothing/head/roman
 	name = "roman soldier's hat"
 	desc = "A fearsome soldier's helm."
 	icon_state = "roman"
 	item_state = "roman"
-
 
 /obj/item/clothing/head/roman/fluff
 	icon_state = "roman2"

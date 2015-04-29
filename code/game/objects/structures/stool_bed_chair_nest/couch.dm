@@ -19,12 +19,6 @@
 
 	return ..()
 
-/obj/structure/stool/bed/chair/couch/afterbuckle()
-	if(buckled_mob)
-		overlays += armrest
-	else
-		overlays -= armrest
-
 /obj/structure/stool/bed/chair/couch/left
 	couchpart = 1
 	icon_state = "couch_left"

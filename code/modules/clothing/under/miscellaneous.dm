@@ -1,6 +1,3 @@
-/obj/item/clothing/under/apollo
-	icon = 'icons/apollo/clothing/uniforms.dmi'
-
 /obj/item/clothing/under/pj/red
 	name = "red pj's"
 	desc = "Sleepwear."
@@ -409,6 +406,13 @@
 	item_color = "sundress_white"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 
+/obj/item/clothing/under/blackjumpskirt
+	name = "black jumpskirt"
+	desc = "A black jumpskirt, Sol size 0."
+	icon_state = "blackjumpskirt"
+	item_state = "blackjumpskirt"
+	item_color = "blackjumpskirt"
+
 /obj/item/clothing/under/captainformal
 	name = "captain's formal uniform"
 	desc = "A captain's formal-wear, for special occasions."
@@ -487,12 +491,12 @@
 	item_color = "mai_yang"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS
 
-/obj/item/clothing/under/apollo/jester
-	name = "jester Suit"
-	desc = "Only a fool would wear such a suit."
-	icon_state = "jester"
-	item_state = "jester"
-	item_color = "jester"
+/obj/item/clothing/under/blazer
+	name = "blue blazer"
+	desc = "A bold but yet conservative outfit, red corduroys, navy blazer and a tie."
+	icon_state = "blue_blazer"
+	item_state = "blue_blazer"
+	item_color = "blue_blazer"
 
 /obj/item/clothing/under/bpajamas
 	name = "blue pajamas"
@@ -509,6 +513,18 @@
 	item_state = "roman"
 	item_color = "roman"
 
+
+/obj/item/clothing/under/apollo
+	icon = 'icons/apollo/clothing/uniforms.dmi'
+	icon_override = 'icons/apollo/mob/uniform.dmi'
+
+/obj/item/clothing/under/apollo/jester
+	name = "jester Suit"
+	desc = "Only a fool would wear such a suit."
+	icon_state = "jester"
+	item_state = "jester"
+	item_color = "jester"
+
 /obj/item/clothing/under/apollo/biomech
 	name = "biomechanic jumpsuit"
 	desc = "Perfect for those creating monstrosities of man and machine."
@@ -522,6 +538,10 @@
 	icon_state = "entertainer"
 	item_state = "entertainer"
 	item_color = "entertainer"
+	item_icons = list(
+		icon_l_hand = 'icons/apollo/obj/lefthand.dmi',
+		icon_r_hand = 'icons/apollo/obj/righthand.dmi',
+	)
 
 /obj/item/clothing/under/apollo/camo
 	name = "camo jumpsuit"

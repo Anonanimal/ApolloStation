@@ -13,7 +13,7 @@ var/global/pipe_processing_killed = 0
 
 datum/controller/game_controller
 	var/processing = 0
-	var/breather_ticks = 3		//a somewhat crude attempt to iron over the 'bumps' caused by high-cpu use by letting the MC have a breather for this many ticks after every loop
+	var/breather_ticks = 4		//a somewhat crude attempt to iron over the 'bumps' caused by high-cpu use by letting the MC have a breather for this many ticks after every loop
 	var/minimum_ticks = 20		//The minimum length of time between MC ticks
 
 	var/air_cost 		= 0
@@ -27,14 +27,14 @@ datum/controller/game_controller
 	var/nano_cost		= 0
 	var/events_cost		= 0
 	var/machine_sort_cost = 0
+	var/alarms_cost     = 0
 	var/ticker_cost		= 0
 	var/total_cost		= 0
 
 	var/last_thing_processed
 
 	var/list/shuttle_list	                    // For debugging and VV
-	var/datum/ore_distribution/asteroid_ore_map // For debugging and VV.
-
+	var/datum/random_map/ore/asteroid_ore_map // For debugging and VV.
 
 datum/controller/game_controller/New()
 	//There can be only one master_controller. Out with the old and in with the new.
@@ -107,8 +107,7 @@ datum/controller/game_controller/proc/setup_objects()
 		T.broadcast_status()
 
 	//Create the mining ore distribution map.
-	asteroid_ore_map = new /datum/ore_distribution()
-	asteroid_ore_map.populate_distribution_map()
+	asteroid_ore_map = new /datum/random_map/ore(null,13,32,5,217,223)
 
 	//Shitty hack to fix mining turf overlays, for some reason New() is not being called.
 	for(var/turf/simulated/floor/plating/airless/asteroid/T in world)
@@ -117,6 +116,9 @@ datum/controller/game_controller/proc/setup_objects()
 
 	//Set up spawn points.
 	populate_spawn_points()
+
+	// Sort the machinery list so it doesn't cause a lagspike at roundstart
+	process_machines_sort()
 
 	world << "\red \b Initializations complete."
 	sleep(-1)
@@ -184,10 +186,10 @@ datum/controller/game_controller/proc/process()
 
 				sleep(breather_ticks)
 
-				//MACHINES FIRST HALF
+				//MACHINES
 				spawn(0)
 					timer = world.timeofday
-					process_machines_process(1,round(machines.len / 2))
+					process_machines()
 					machines_cost = (world.timeofday - timer) / 10
 
 				sleep(breather_ticks)
@@ -241,34 +243,18 @@ datum/controller/game_controller/proc/process()
 					event_manager.process()
 					events_cost = (world.timeofday - timer) / 10
 
-				//MACHINES SECOND HALF
-				spawn(0)
-					timer = world.timeofday
-					process_machines_process(round(machines.len / 2)+1, machines.len)
-					machines_cost += (world.timeofday - timer) / 10
-
-				sleep(breather_ticks)
+				//ALARMS
+				timer = world.timeofday
+				process_alarms()
+				alarms_cost = (world.timeofday - timer) / 10
 
 				//TIMING
-				total_cost = air_cost + sun_cost + mobs_cost + diseases_cost + machines_cost + objects_cost + networks_cost + powernets_cost + nano_cost + events_cost + ticker_cost
+				total_cost = air_cost + sun_cost + mobs_cost + diseases_cost + machines_cost + objects_cost + networks_cost + powernets_cost + nano_cost + events_cost + alarms_cost + ticker_cost
 
 				sleep( minimum_ticks - max(world.timeofday-start_time,0))
 
 			else
 				sleep(10)
-
-datum/controller/game_controller/proc/process_machines_process(var/start, var/end)
-//start and end added to stagger machine processing as a test
-//produces a runtime error at roundstart when 13k machines -> 6k machines.
-	while(start<=end)
-		var/obj/machinery/Machine = machines[start]
-		if(Machine.process() != PROCESS_KILL)
-			if(Machine)
-				if(Machine.use_power)
-					Machine.auto_use_power()
-				start++
-				continue
-		machines.Cut(start,start+1)
 
 datum/controller/game_controller/proc/announcements()
 	if( controller_iteration % 300 == 0 )// Make an announcement every 10 minutes
@@ -289,6 +275,32 @@ datum/controller/game_controller/proc/announcements()
 						"<font color='green'><big><img src=\ref['icons/misc/news.png']></img></big><b> We've got an <a href='http://apollo-community.org/viewforum.php?f=42'>IRC channel</a> if you want to chat!<br></font></b>",
 						"<font color='green'><big><img src=\ref['icons/misc/news.png']></img></big><b> Nucleations and IPCs are always dewhitelisted!<br></font></b>",
 		)
+
+datum/controller/game_controller/proc/process_machines()
+	process_machines_sort()
+	process_machines_process()
+
+/var/global/machinery_sort_required = 0
+datum/controller/game_controller/proc/process_machines_sort()
+	if(machinery_sort_required)
+		machinery_sort_required = 0
+		machines = dd_sortedObjectList(machines)
+
+datum/controller/game_controller/proc/process_machines_process()
+	for(var/obj/machinery/Machine in machines)
+		last_thing_processed = Machine.type
+		if(Machine.process() != PROCESS_KILL)
+			if(Machine)
+				Machine.power_change()
+				if(Machine.use_power)
+					Machine.auto_use_power()
+				continue
+		machines -= Machine
+
+datum/controller/game_controller/proc/process_alarms()
+	last_thing_processed = /datum/subsystem/alarm
+	alarm_manager.fire()
+
 datum/controller/game_controller/proc/Recover()		//Mostly a placeholder for now.
 	var/msg = "## DEBUG: [time2text(world.timeofday)] MC restarted. Reports:\n"
 	for(var/varname in master_controller.vars)
