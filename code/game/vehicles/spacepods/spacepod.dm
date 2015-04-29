@@ -31,6 +31,8 @@
 	var/lights_power = 6
 	var/allow2enter = 1
 	var/empcounter = 0 //Used for disabling movement when hit by an EMP
+	var/move_ticks = 3 // Moves once in this many ticks
+	var/cur_move_tick = 0 // Keeps track of how many ticks since last movement
 
 /obj/spacepod/New()
 	. = ..()
@@ -854,8 +856,16 @@ obj/spacepod/verb/toggleLights()
 		return
 
 /obj/spacepod/Move(NewLoc, Dir = 0, step_x = 0, step_y = 0)
+	if( cur_move_tick < move_ticks )
+		cur_move_tick++
+		return
+
 	..()
-	if(dir == 1 || dir == 4)
+
+	cur_move_tick = 0
+
+	if(dir == 1 || dir == 4 )
+
 		src.loc.Entered(src)
 
 /obj/spacepod/proc/Process_Spacemove(var/check_drift = 0, mob/user)

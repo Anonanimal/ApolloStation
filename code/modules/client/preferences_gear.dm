@@ -219,7 +219,7 @@ var/global/list/gear_datums = list()
 
 /datum/gear/tophat
 	display_name = "hat, tophat"
-	path = /obj/item/clothing/head/that
+	path = /obj/item/clothing/head/tophat
 	cost = 1
 	slot = slot_head
 
