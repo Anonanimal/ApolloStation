@@ -71,6 +71,16 @@
 	var/footstep = 1	//used for squeeks whilst walking
 	species_restricted = null
 
+/obj/item/clothing/shoes/clown_shoes/handle_movement(var/turf/walking, var/running)
+	if(running)
+		if(footstep >= 2)
+			footstep = 0
+			playsound(src, "clownstep", 50, 1) // this will get annoying very fast.
+		else
+			footstep++
+	else
+		playsound(src, "clownstep", 20, 1)
+
 /obj/item/clothing/shoes/jackboots
 	name = "jackboots"
 	desc = "Nanotrasen-issue Security combat boots for combat scenarios or combat situations. All combat, all the time."
@@ -130,24 +140,6 @@
 	slowdown = SHOES_SLOWDOWN+1
 	species_restricted = null
 
-obj/item/clothing/shoes/apollo/jester
-	name = "Jester Shoes"
-	desc = "As worn by the clowns of old."
-	icon_state = "jestershoes"
-	item_state = "jestershoes"
-	force = 0
-	var/footstep = 1	//used for jingles whilst walking
-	species_restricted = null
-
-/obj/item/clothing/shoes/roman
-	name = "roman soldier's shoes"
-	desc = "Et tu boote?"
-	icon_state = "roman"
-	item_state = "roman"
-	item_color = "roman"
-	force = 3
-	species_restricted = null
-
 /obj/item/clothing/shoes/kneehigh
 	name = "knee-high socks"
 	desc = "These go all the way up your shinny-shin-shins!"
@@ -159,3 +151,29 @@ obj/item/clothing/shoes/apollo/jester
 
 	cold_protection = FEET
 	min_cold_protection_temperature = T0C - 20
+
+
+/obj/item/clothing/shoes/apollo
+	icon = 'icons/apollo/clothing/feet.dmi'
+	item_icons = list(
+		icon_l_hand = 'icons/apollo/obj/lefthand.dmi',
+		icon_r_hand = 'icons/apollo/obj/righthand.dmi',
+	)
+
+obj/item/clothing/shoes/apollo/jester
+	name = "Jester Shoes"
+	desc = "As worn by the clowns of old."
+	icon_state = "jestershoes"
+	item_state = "jestershoes"
+	force = 0
+	var/footstep = 1	//used for jingles whilst walking
+	species_restricted = null
+
+/obj/item/clothing/shoes/apollo/roman
+	name = "roman soldier's shoes"
+	desc = "Et tu boote?"
+	icon_state = "roman"
+	item_state = "roman"
+	item_color = "roman"
+	force = 3
+	species_restricted = null

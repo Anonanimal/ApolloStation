@@ -77,7 +77,8 @@
 
 
 /obj/machinery/door/firedoor/examine(mob/user)
-	if(!..(user, 1) && !isAI(user))
+	. = ..(user, 1)
+	if(!. || !density)
 		return
 
 	if(pdiff >= FIREDOOR_MAX_PRESSURE_DIFF)
@@ -138,6 +139,14 @@
 
 	if(blocked)
 		user << "<span class='warning'>\The [src] is welded solid!</span>"
+		return
+
+	var/mob/living/carbon/human/us = user
+
+	if(density && us.species && us.species.name_plural == "Xenomorphs")
+		user << "You pry open the emergency shutter."
+		spawn()
+			open()
 		return
 
 	var/alarmed = lockdown

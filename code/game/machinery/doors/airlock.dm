@@ -94,6 +94,10 @@
 	secured_wires = 1
 	assembly_type = /obj/structure/door_assembly/door_assembly_highsecurity //Until somebody makes better sprites.
 
+/obj/machinery/door/airlock/vault/bolted
+	icon_state = "door_locked"
+	locked = 1
+
 /obj/machinery/door/airlock/freezer
 	name = "Freezer Airlock"
 	icon = 'icons/obj/doors/Doorfreezer.dmi'
@@ -862,6 +866,8 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/attackby(C as obj, mob/user as mob)
 	//world << text("airlock attackby src [] obj [] mob []", src, C, user)
+	var/mob/living/carbon/human/us = user
+
 	if(!istype(usr, /mob/living/silicon))
 		if(src.isElectrified())
 			if(src.shock(user, 75))
@@ -962,6 +968,15 @@ About the new airlock wires panel:
 				else
 					user << "\red You need to be wielding \the [C] to do that."
 
+	else if(us.species && us.species.name_plural == "Xenomorphs")
+		user << "<span class='notice'>You begin to force open \the [src].</span>"
+		if(!do_mob(user, src, 60)) return
+		if(locked)
+			user << "<span class='notice'>The airlock's bolts prevent it from being forced.</span>"
+		else
+			user << "<span class='notice'>You force open the airlock.</span>"
+			playsound(src.loc, 'sound/effects/xenoDoorForced.ogg', 100, 1)
+			open(1)
 	else
 		..()
 	return
@@ -1081,10 +1096,6 @@ About the new airlock wires panel:
 	relativewall_neighbours()
 
 	..()
-
-	//High-sec airlocks are much harder to completely break by emitters.
-	if(secured_wires)
-		emitter_resistance *= 3
 
 	//if assembly is given, create the new door from the assembly
 	if (assembly && istype(assembly))

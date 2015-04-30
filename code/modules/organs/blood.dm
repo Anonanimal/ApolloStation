@@ -31,7 +31,7 @@ var/const/BLOOD_VOLUME_SURVIVE = 122
 	for(var/datum/reagent/blood/B in vessel.reagent_list)
 		if(B.id == "blood")
 			B.data = list(	"donor"=src,"viruses"=null,"species"=species.name,"blood_DNA"=dna.unique_enzymes,"blood_colour"= species.blood_color,"blood_type"=dna.b_type,	\
-							"resistances"=null,"trace_chem"=null, "virus2" = null, "antibodies" = null)
+							"resistances"=null,"trace_chem"=null, "virus2" = null, "antibodies" = list())
 			B.color = B.data["blood_colour"]
 
 // Takes care blood loss and regeneration
@@ -57,9 +57,13 @@ var/const/BLOOD_VOLUME_SURVIVE = 122
 				B.volume += 0.1 // regenerate blood VERY slowly
 				if (reagents.has_reagent("nutriment"))	//Getting food speeds it up
 					B.volume += 0.4
+					if(species && species.name_plural == "Xenomorphs")
+						B.volume += 0.5
 					reagents.remove_reagent("nutriment", 0.1)
 				if (reagents.has_reagent("iron"))	//Hematogen candy anyone?
 					B.volume += 0.8
+					if(species && species.name_plural == "Xenomorphs")
+						B.volume += 0.5
 					reagents.remove_reagent("iron", 0.1)
 
 		// Damaged heart virtually reduces the blood volume, as the blood isn't

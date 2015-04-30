@@ -48,7 +48,7 @@
 		H.death()
 
 	//This is a terrible hack and I should be ashamed.
-	var/datum/seed/diona = seed_types["diona"]
+	var/datum/seed/diona = plant_controller.seeds["diona"]
 	if(!diona)
 		del(src)
 
@@ -158,12 +158,12 @@
 
 /datum/organ/internal/xenos/phoronvessel/sentinel
 	stored_phoron = 100
-	max_phoron = 250
+	max_phoron = 300
 
 /datum/organ/internal/xenos/phoronvessel/hunter
 	name = "tiny phoron vessel"
 	stored_phoron = 100
-	max_phoron = 150
+	max_phoron = 200
 
 /datum/organ/internal/xenos/acidgland
 	name = "acid gland"
