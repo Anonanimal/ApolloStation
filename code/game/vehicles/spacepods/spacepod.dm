@@ -205,7 +205,7 @@
 			user << "\red The maintenance hatch is closed!"
 			return
 		if(!equipment_system)
-			user << "<span class='warning'>The pod has no equipment datum, yell at pomf</span>"
+			user << "<span class='warning'>The pod has no equipment datum, yell at Kwask</span>"
 			return
 		if(istype(W, /obj/item/device/spacepod_equipment/weaponry))
 			if(equipment_system.weapon_system)

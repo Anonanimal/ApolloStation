@@ -1,7 +1,7 @@
 /obj/item/organ/brain
 	name = "brain"
 	health = 400 //They need to live awhile longer than other organs.
-	desc = "A piece of juicy meat found in a person's head."
+	desc = "A piece of juicy meat found in a person's head. Who knows who it belongs to."
 	icon_state = "brain2"
 	force = 1.0
 	w_class = 2.0
@@ -30,7 +30,6 @@
 			brainmob.client.screen.len = null //clear the hud
 
 /obj/item/organ/brain/proc/transfer_identity(var/mob/living/carbon/H)
-	name = "\the [H]'s [initial(src.name)]"
 	brainmob = new(src)
 	brainmob.name = H.real_name
 	brainmob.real_name = H.real_name
